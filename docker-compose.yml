@@ -10,6 +10,22 @@ volumes:
 
 services:
 
+  dockerhost:
+    image: qoomon/docker-host:latest
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    restart: on-failure
+    networks:
+      - monitor-net
+
+  networking:
+    image: curlimages/curl
+    container_name: networking
+    networks:
+      - monitor-net
+    command: 'curl dockerhost:9980'
+
   prometheus:
     image: prom/prometheus:v2.16.0
     container_name: prometheus
