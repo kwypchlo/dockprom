@@ -21,6 +21,7 @@ services:
 
   networking:
     image: curlimages/curl
+    depends_on: ['dockerhost']
     container_name: networking
     networks:
       - monitor-net
