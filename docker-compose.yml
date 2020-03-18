@@ -20,14 +20,6 @@ services:
     networks:
       - monitor-net
 
-  networking:
-    image: curlimages/curl
-    depends_on: ['dockerhost']
-    container_name: networking
-    networks:
-      - monitor-net
-    command: 'curl dockerhost:9980'
-
   prometheus:
     image: prom/prometheus:v2.16.0
     container_name: prometheus
@@ -85,19 +77,20 @@ services:
     labels:
       org.label-schema.group: "monitoring"
 
-  # nginxexporter:
-  #   # prerequisites https://github.com/nginxinc/nginx-prometheus-exporter#prerequisites
-  #   image: nginx/nginx-prometheus-exporter:0.6.0
-  #   container_name: nginxexporter
-  #   command:
-  #     - '-nginx.scrape-uri=http://127.0.0.1:8080/stub_status'
-  #   restart: unless-stopped
-  #   expose:
-  #     - 9113
-  #   networks:
-  #     - monitor-net
-  #   labels:
-  #     org.label-schema.group: "monitoring"
+  nginxexporter:
+    # prerequisites https://github.com/nginxinc/nginx-prometheus-exporter#prerequisites
+    image: nginx/nginx-prometheus-exporter:0.6.0
+    container_name: nginxexporter
+    depends_on: ['dockerhost']
+    command:
+      - '-nginx.scrape-uri=http://dockerhost:8080/stub_status'
+    restart: unless-stopped
+    expose:
+      - 9113
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
 
   cadvisor:
     image: gcr.io/google-containers/cadvisor:v0.34.0
