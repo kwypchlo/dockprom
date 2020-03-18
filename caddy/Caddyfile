@@ -28,6 +28,15 @@
     tls off
 }
 
+:9113 {
+    proxy / nginxexporter:9113 {
+            transparent
+        }
+
+    errors stderr
+    tls off
+}
+
 :3000 {
     proxy / grafana:3000 {
             transparent
