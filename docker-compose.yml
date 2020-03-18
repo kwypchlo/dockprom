@@ -11,8 +11,8 @@ volumes:
 services:
 
   dockerhost:
-    name: dockerhost
     image: qoomon/docker-host:latest
+    container_name: dockerhost
     cap_add:
       - NET_ADMIN
       - NET_RAW
